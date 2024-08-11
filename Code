@@ -1,0 +1,74 @@
+#include <MD_MAX72xx.h>
+#include <SPI.h>
+
+
+
+#define HARDWARE_TYPE MD_MAX72XX::FC16_HW
+#define MAX_DEVICES 4
+int SW=2; //Switch input pin 2
+
+//Hardware SPI Arduino UNO
+// CLK Pin  > 13 SCK
+// Data Pin > 11 MOSI
+
+#define CS_PIN    10
+
+// Hardware SPI connection
+MD_MAX72XX mx = MD_MAX72XX(HARDWARE_TYPE, CS_PIN, MAX_DEVICES);
+
+byte smile1[8] = {0x80,0xc0,0x60,0x30,0x18,0x0f,0x07,0x00};
+byte smile2[8] = {0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x00};
+byte smile3[8] = {0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x00};
+byte smile4[8] = {0x01,0x03,0x06,0x0c,0x18,0xf0,0xe0,0x00};
+
+byte sad1[8] = {0x00,0x07,0x0f,0x18,0x30,0x60,0xc0,0x80};
+byte sad2[8] = {0x00,0xff,0xff,0x00,0x00,0x00,0x00,0x00};
+byte sad3[8] = {0x00,0xff,0xff,0x00,0x00,0x00,0x00,0x00};
+byte sad4[8] = {0x00,0xe0,0xf0,0x18,0x0c,0x06,0x03,0x01};
+
+void setup() {  
+  mx.begin();
+  mx.control(MD_MAX72XX::INTENSITY, 0);
+  mx.clear();
+  pinMode(SW, INPUT_PULLUP);
+  }
+
+void loop() {
+  drawShape();
+}
+
+void drawShape() {if (digitalRead(SW) == LOW){
+  for (int i = 0; i <= 7; i++) {
+    mx.setRow(0, 0, i, smile1[i]);
+  }
+
+  for (int i = 0; i <= 7; i++) {
+    mx.setRow(1, 1, i, smile2[i]);
+  }
+ 
+  for (int i = 0; i <= 7; i++) {
+    mx.setRow(2, 2, i, smile3[i]);
+  }
+  
+  for (int i = 0; i <= 7; i++) {
+    mx.setRow(3, 3, i, smile4[i]);
+  }
+}
+else {
+ for (int i = 0; i <= 7; i++) {
+    mx.setRow(0, 0, i, sad1[i]);
+  }
+
+  for (int i = 0; i <= 7; i++) {
+    mx.setRow(1, 1, i, sad2[i]);
+  }
+ 
+  for (int i = 0; i <= 7; i++) {
+    mx.setRow(2, 2, i, sad3[i]);
+  }
+  
+  for (int i = 0; i <= 7; i++) {
+    mx.setRow(3, 3, i, sad4[i]);
+  } 
+}
+}
